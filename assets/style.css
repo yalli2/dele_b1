@@ -222,3 +222,7 @@ textarea.wr:focus{border-color:var(--accent);outline:none}
   .passage{padding:14px}
 }
 @media print{.bar,.side,.actions,.player,.tabs{display:none}.layout{display:block}}
+
+.mdt{border-collapse:collapse;margin:6px 0 10px;font:14px/1.5 var(--ui);width:100%}
+.mdt th,.mdt td{border:1px solid var(--line2);padding:6px 10px;text-align:left}
+.mdt th{background:var(--accent-soft)}

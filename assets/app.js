@@ -22,6 +22,7 @@ function md(text){
     b=b.trim();
     if(b.startsWith("## ")) return "<h4>"+inline(b.slice(3))+"</h4>";
     if(b.startsWith("> ")) return '<p class="src">'+inline(b.slice(2))+"</p>";
+    if(/^\|/.test(b)){const rows=b.split(/\n/).filter(l=>!/^\|[\s\-|:]+\|$/.test(l)).map(l=>l.replace(/^\||\|$/g,"").split("|"));return '<table class="mdt">'+rows.map((r,i)=>"<tr>"+r.map(c=>(i?"<td>":"<th>")+inline(c.trim())+(i?"</td>":"</th>")).join("")+"</tr>").join("")+"</table>";}
     if(/^- /.test(b)) return "<ul>"+b.split(/\n/).map(l=>"<li>"+inline(l.replace(/^- /,""))+"</li>").join("")+"</ul>";
     return "<p>"+inline(b).replace(/\n/g,"<br>")+"</p>";
   }).join("");
@@ -153,7 +154,7 @@ D.main=function(){
         h("h1",{},B.headline),
         h("p",{},B.intro),
         h("p",{class:"book"},B.bookNote))),
-    h("div",{class:"timeline"},B.pruebas.map((p,i)=>h("div",{},h("i",{},"Prueba "+(i+1)),h("b",{},p.name),h("span",{},p.ko+" · "+p.min+"분"+(p.note?" · "+p.note:"")))))));
+    h("div",{class:"timeline"},B.pruebas.map((p,i)=>h("div",{},h("i",{},p.label||("Prueba "+(i+1))),h("b",{},p.name),h("span",{},p.ko+" · "+p.min+"분"+(p.note?" · "+p.note:"")))))));
   const sh=h("div",{class:"sec-h"},h("h2",{},"모의시험 "+B.exams.length+"회"),h("p",{},"막대는 시험별 영역 점수(채점한 문항 기준)예요. 60% 이상이면 초록색."));
   w.append(sh);
   const ul=h("ul",{class:"exams"});
@@ -230,7 +231,7 @@ function renderExam(n,meta){
     const ol=h("ol");
     side.append(h("h4",{},pm.name),ol);
     const sb=h("div",{class:"scorebox"});side.append(sb);
-    let num=0;
+    let num=(P.start||1)-1;
     P.tasks.forEach((t,ti)=>{
       const id=`${pi}-${ti}`;
       const cnt=countItems(t);const start=num+1;num+=cnt;
